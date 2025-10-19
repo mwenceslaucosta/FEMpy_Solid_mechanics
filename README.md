@@ -1,6 +1,6 @@
-# Linear_FEM_Python
+# FEMpy - Non linear finite element solver for solid mechanics.
 
-* Código FEM para análise linear.
+* Código FEM para análise linear e não linear (material).
 * Pré processamento: Pode ser realizada no Salome ou Gmsh. 
 * Pós-processamento: O arquivo de saída gerado pode ser utilizado no Paraview.
 
