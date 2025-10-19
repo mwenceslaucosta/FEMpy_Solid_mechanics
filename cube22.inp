@@ -1,0 +1,92 @@
+**
+** Heading +++++++++++++++++++++++++++++++++++++++++++++++++
+**
+*Heading
+Hash: 0T3McuOO, Date: 09/27/2025, Unit system: MM_TON_S_C
+**
+** Nodes +++++++++++++++++++++++++++++++++++++++++++++++++++
+**
+*Node
+1, 0.00000000E+000, 0.00000000E+000, 0.00000000E+000
+2, 1.00000000E+002, 0.00000000E+000, 0.00000000E+000
+3, 2.00000000E+002, 0.00000000E+000, 0.00000000E+000
+4, 0.00000000E+000, 2.00000000E+001, 0.00000000E+000
+5, 1.00000000E+002, 2.00000000E+001, 0.00000000E+000
+6, 2.00000000E+002, 2.00000000E+001, 0.00000000E+000
+7, 0.00000000E+000, 0.00000000E+000, 2.00000000E+001
+8, 1.00000000E+002, 0.00000000E+000, 2.00000000E+001
+9, 2.00000000E+002, 0.00000000E+000, 2.00000000E+001
+10, 0.00000000E+000, 2.00000000E+001, 2.00000000E+001
+11, 1.00000000E+002, 2.00000000E+001, 2.00000000E+001
+12, 2.00000000E+002, 2.00000000E+001, 2.00000000E+001
+**
+** Elements ++++++++++++++++++++++++++++++++++++++++++++++++
+**
+*Element, Type=C3D8, Elset=Solid_part-1
+1, 1, 2, 5, 4, 7, 8, 11, 10
+2, 2, 3, 6, 5, 8, 9, 12, 11
+**
+** Node sets +++++++++++++++++++++++++++++++++++++++++++++++
+**
+*Nset, Nset=Internal-1_BC_Neumann_point_X_0
+3, 6, 9, 12
+*Nset, Nset=Internal-1_BC_Dirichlet_X_0
+1, 4, 7, 10
+*Nset, Nset=Internal-1_BC_Dirichlet_Y_0
+1, 4, 7, 10
+*Nset, Nset=Internal-1_BC_Dirichlet_Z_0
+1, 4, 7, 10
+**
+** Element sets ++++++++++++++++++++++++++++++++++++++++++++
+**
+*Elset, Elset=Volume1
+1, 2
+*Elset, Elset=Internal-1_BC_Neumann_point_X_0_S4
+2
+*Elset, Elset=Internal-1_BC_Dirichlet_X_0_S6
+1
+*Elset, Elset=Internal-1_BC_Dirichlet_Y_0_S6
+1
+*Elset, Elset=Internal-1_BC_Dirichlet_Z_0_S6
+1
+**
+** Surfaces ++++++++++++++++++++++++++++++++++++++++++++++++
+**
+*Surface, Name=BC_Neumann_point_X_0, Type=Element
+Internal-1_BC_Neumann_point_X_0_S4, S4
+*Surface, Name=BC_Dirichlet_X_0, Type=Element
+Internal-1_BC_Dirichlet_X_0_S6, S6
+*Surface, Name=BC_Dirichlet_Y_0, Type=Element
+Internal-1_BC_Dirichlet_Y_0_S6, S6
+*Surface, Name=BC_Dirichlet_Z_0, Type=Element
+Internal-1_BC_Dirichlet_Z_0_S6, S6
+**
+** Physical constants ++++++++++++++++++++++++++++++++++++++
+**
+**
+** Materials +++++++++++++++++++++++++++++++++++++++++++++++
+**
+**
+** Sections ++++++++++++++++++++++++++++++++++++++++++++++++
+**
+**
+** Pre-tension sections ++++++++++++++++++++++++++++++++++++
+**
+**
+** Constraints +++++++++++++++++++++++++++++++++++++++++++++
+**
+**
+** Surface interactions ++++++++++++++++++++++++++++++++++++
+**
+**
+** Contact pairs +++++++++++++++++++++++++++++++++++++++++++
+**
+**
+** Amplitudes ++++++++++++++++++++++++++++++++++++++++++++++
+**
+**
+** Initial conditions ++++++++++++++++++++++++++++++++++++++
+**
+**
+** Steps +++++++++++++++++++++++++++++++++++++++++++++++++++
+**

@@ -1,0 +1,2 @@
+cd /D D:\Aperam\FEM_Python
+pytest -q test_FEM_Class.py
