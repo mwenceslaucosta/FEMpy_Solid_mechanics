@@ -13,9 +13,106 @@ from numpy import linalg
 import math 
 
 #@jit(nopython=True,cache=True)
-def tg_modulus(tangent_modulus,mat_prop):
+def tg_modulus(tangent_modulus,mat_prop,internal_var_Gauss,strain_1_gauss,strain_0_gauss):
     
-    pass
+    Pro_DEV=np.zeros((6,6))
+    Pro_DEV[0,0]=2/3
+    Pro_DEV[0,1]=-1/3
+    Pro_DEV[0,2]=-1/3
+    Pro_DEV[1,0]=-1/3 
+    Pro_DEV[1,1]=2/3
+    Pro_DEV[1,2]=-1/3 
+    Pro_DEV[2,0]=-1/3 
+    Pro_DEV[2,1]=-1/3 
+    Pro_DEV[2,2]=2/3
+    Pro_DEV[3,3]=1/2
+    Pro_DEV[4,4]=1/2
+    Pro_DEV[5,5]=1/2
+    
+    I_voigt=np.zeros((6,1))
+    I_voigt[0,0]=1
+    I_voigt[1,0]=1
+    I_voigt[2,0]=1
+
+    E=mat_prop[0]
+    Poisson = mat_prop[1]
+    Sigma_Y0 = mat_prop[2]
+    H = mat_prop[3]
+    K_1 = mat_prop[4]
+    K_2 = mat_prop[5]
+    theta = mat_prop[6]
+    
+    G=E/(2*(1+Poisson))
+    K_vol=2*G*(1+Poisson)/(3*(1-2*Poisson))
+    
+    #1. Recovering internal variables at Gauss point 
+        
+    #Elastic strain last strain
+    elastic_strain_0=internal_var_Gauss[0:6]
+    
+    #Kinematic hardening tensor internal variable in the last time step
+    Kin_harden_beta_0=internal_var_Gauss[6:12]
+    
+    #Isotropic hardening scalar internal variable in the last time step
+    iso_harden_alfa_0=internal_var_Gauss[12]
+    
+    #Plastic multiplier
+    delta_gama_0=internal_var_Gauss[13]
+    
+    #2.  Strain increment
+    delta_strain=strain_1_gauss-strain_0_gauss
+    
+    #Converting vector in Voigt to tensor notation 
+    
+    Kin_harden_beta_0_tensor=vec_to_matrix(Kin_harden_beta_0,'Stress')
+    
+    elastic_strain_0_tensor=vec_to_matrix(elastic_strain_0,'Strain')
+    
+    delta_strain_tensor=vec_to_matrix(delta_strain,'Strain')
+    
+    #3.  Computing trial state
+    
+    #Elastic Trial strain
+    strain_elas_trial=elastic_strain_0_tensor+delta_strain_tensor
+    
+    #Trace of the strain tensor 
+    trace_e=np.trace(strain_elas_trial)
+    
+    #Trial Volumetric stress 
+    S_vol_elas_trial=K_vol*trace_e*np.eye(3)
+    
+    #Trial deviatoric strain tensor
+    ed_elas_trial=strain_elas_trial-1/3*trace_e*np.eye(3)
+    
+    #Trial deviatoric stress tensor 
+    S_trial_dev=2*G*ed_elas_trial
+    
+    beta_trial=Kin_harden_beta_0_tensor
+    
+    #Trial flux Matrix
+    eta_trial=S_trial_dev-beta_trial
+    
+    #L2-Norm of eta flux Matrix
+    norm_eta_trial=linalg.norm(eta_trial)
+    normalized_eta_trial=eta_trial/norm_eta_trial
+    root_3_2=np.sqrt(3/2)
+    
+    #4.  Check plastic admissibility
+    [fun_escoamento_trial,deri_sigma_alfa]=fun_encruamento_exp(iso_harden_alfa_0,Sigma_Y0,K_1,K_2,theta)
+       
+    #q Trial
+    q_trial=root_3_2*norm_eta_trial
+       
+    #Yield surface trial
+    f_trial=q_trial - fun_escoamento_trial 
+    
+    a=2*G*(1-delta_gama_0*3*G/q_trial)
+    b=6*G**2*(delta_gama_0/q_trial-1/(3*G+H+deri_sigma_alfa))
+    c=K_vol
+    
+    tangent_modulus=a*Pro_DEV + b*(normalized_eta_trial @ normalized_eta_trial.T) + c*(I_voigt @ I_voigt.T) #Verificar melhor se a normal N é somente isso mesmo 
+       
+    return tangent_modulus
 
 #@jit(nopython=True,cache=True)    
 def get_stress_and_strain(B_all_elem,tangent_modulus,stress_1,strain_1,connectivity,
@@ -98,10 +195,7 @@ def Plasticity_von_Mises3D(strain_1_gauss,strain_0_gauss,internal_var_Gauss,mat_
     K_vol_2=E/(3*(1-2*Poisson))
     
     #1. Recovering internal variables at Gauss point 
-    
-    #Elastic strain last strain
-    # plastic_strain_0=internal_var_Gauss_0[0:6]
-    
+       
     #Elastic strain last strain
     elastic_strain_0=internal_var_Gauss[0:6]
     elastic_strain_0=np.array([-0.002500000000000,-0.002500000000000,0.010000000000000,1.761828530288945e-19,2.168404344971009e-19,-3.252606517456513e-19])
@@ -170,6 +264,7 @@ def Plasticity_von_Mises3D(strain_1_gauss,strain_0_gauss,internal_var_Gauss,mat_
         ee_1=strain_elas_trial
         alfa_1=iso_harden_alfa_0
         beta_1=Kin_harden_beta_0_tensor
+        delta_gama=0
     else:
         #Plastic - Corrector phase            
         delta_gama=newton_delta_gama(q_trial,alfa_trial,Sigma_Y0,K_1,K_2,theta,G,H)
@@ -188,7 +283,8 @@ def Plasticity_von_Mises3D(strain_1_gauss,strain_0_gauss,internal_var_Gauss,mat_
     internal_var_Gauss[0:6]=matrix_to_vec(ee_1,'Strain')
     internal_var_Gauss[6:12]=matrix_to_vec(beta_1,'Stress')
     internal_var_Gauss[12]=alfa_1
-    
+    internal_var_Gauss[13]=delta_gama
+        
     return sigma,internal_var_Gauss
     
     
