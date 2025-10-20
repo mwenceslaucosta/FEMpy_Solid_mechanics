@@ -1,0 +1,46 @@
+Matlab Programs. 
+
+NLFEA.txt Main program
+ELAST3D.txt Linear elastic material model
+SHAPEL.txt Shape functions and derivatives
+One_tension.txt One-element example
+
+Two_element_example.txt Two_element_example
+
+Mooney.txt Mooney-Rivline material model
+HYPER3D.txt Hyperelastic material model assembly
+
+PLAST3D.txt Plasticity material model assembly
+combHard.txt Linear combined hardening plasticity material
+combHardTan.txt Algorithmic tangent stiffness for linear combined hardening plasticity material
+rotatedStress.txt Objective integration for finite rotation
+mulPlast.txt Multiplicative plasticity material model
+mulPlastTan.txt Algorithmic tangent stiffness for multiplicative plasticity material model
+
+Other Matlab Programs that are not used in NLFEA but used in examples in the textbook.
+
+combHard1D.txt 1D Linear combined hardening plasticity material
+cntelm2d.txt 2D contact formulation between two flexible bodies
+cntelm3d.txt 3D contact formulation between one flexible body and one rigid wall
+MATLAB Codes in Examples
+Matlab Programs. Need to change the extension ".txt" to ".m" after download.
+
+E1_16.txt Example 1.16
+
+E2_3.txt Example 2.3 Newton-Raphson method
+E2_4.txt Example 2.4 Divergence of the Newton-Raphson method
+E2_5.txt Example 2.5 Two nonlinear springs (modified Newton-Raphson method)
+E2_6.txt Example 2.6 Nonlinear algebraic equation (secant method)
+E2_7.txt Example 2.7 Two nonlinear springs (Secant method)
+E2_8.txt Example 2.8 Displacement controlled procedure
+
+E3_8.txt Example 3.8 Uniaxial bar--total Lagrangian formulation
+E3_9.txt Example 3.9 Uniaxial bar--updated Lagrangian formulation
+E3_16.txt Example 3.16 Hyperelastic tension example
+
+E4_5.txt Example 4.5 Two bars in parallel: updating iteration
+E4_15.txt Example 4.15 - Shear deformation of elastoplastic square
+E4_19.txt Example 4.19 - Shear deformation of a square (finite rotation)
+E4_22.txt Example 4.22 - Shear deformation of a square
+
+Bending_5Elem_Linear.txt Bending of cantilevered beam (five elements, linear elastic)
