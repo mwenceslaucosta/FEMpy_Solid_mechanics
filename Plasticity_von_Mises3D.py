@@ -13,7 +13,7 @@ from numpy import linalg
 import math 
 
 #@jit(nopython=True,cache=True)
-def tg_modulus(tangent_modulus,mat_prop,internal_var_Gauss,strain_1_gauss,strain_0_gauss):
+def tg_modulus(tangent_modulus,mat_prop,internal_var_Gauss,strain_1_gauss,strain_0_gauss,delta_gama):
     
     Pro_DEV=np.zeros((6,6))
     Pro_DEV[0,0]=2/3
@@ -55,10 +55,7 @@ def tg_modulus(tangent_modulus,mat_prop,internal_var_Gauss,strain_1_gauss,strain
     
     #Isotropic hardening scalar internal variable in the last time step
     iso_harden_alfa_0=internal_var_Gauss[12]
-    
-    #Plastic multiplier
-    delta_gama_0=internal_var_Gauss[13]
-    
+        
     #2.  Strain increment
     delta_strain=strain_1_gauss-strain_0_gauss
     
@@ -106,11 +103,32 @@ def tg_modulus(tangent_modulus,mat_prop,internal_var_Gauss,strain_1_gauss,strain
     #Yield surface trial
     f_trial=q_trial - fun_escoamento_trial 
     
-    a=2*G*(1-delta_gama_0*3*G/q_trial)
-    b=6*G**2*(delta_gama_0/q_trial-1/(3*G+H+deri_sigma_alfa))
+    a=2*G*(1-delta_gama*3*G/q_trial)
+    b=6*G**2*(delta_gama/q_trial-1/(3*G+H+deri_sigma_alfa))
     c=K_vol
     
-    tangent_modulus=a*Pro_DEV + b*(normalized_eta_trial @ normalized_eta_trial.T) + c*(I_voigt @ I_voigt.T) #Verificar melhor se a normal N é somente isso mesmo 
+    #Elastic Consistent tangent modulus:
+    if f_trial<=0:
+            
+        A=Poisson/(1-Poisson)
+        B=(1-2*Poisson)/(2*((1-Poisson)))
+        C=E*(1-Poisson)/((1+Poisson)*(1-2*Poisson))
+        
+        tangent_modulus[:,:]=0
+        tangent_modulus[0,0]=1; tangent_modulus[1,1]=1
+        tangent_modulus[1,1]=1; tangent_modulus[2,2]=1
+        tangent_modulus[0,1]=A; tangent_modulus[0,2]=A
+        tangent_modulus[1,0]=A; tangent_modulus[1,2]=A
+        tangent_modulus[2,0]=A; tangent_modulus[2,1]=A
+        tangent_modulus[3,3]=B; tangent_modulus[4,4]=B
+        tangent_modulus[5,5]=B
+        
+        tangent_modulus=tangent_modulus*C
+   
+    #Plastic Consistent tangent modulus        
+    else: 
+        
+        tangent_modulus=a*Pro_DEV + b*(normalized_eta_trial @ normalized_eta_trial.T) + c*(I_voigt @ I_voigt.T) #Verificar melhor se a normal N é somente isso mesmo 
        
     return tangent_modulus
 

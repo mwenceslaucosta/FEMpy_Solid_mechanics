@@ -74,8 +74,8 @@ class Init_Vars:
             self.strain_gauss_all=np.zeros((mesh.n_elem,n_Voight*mesh.n_Gauss_elem))
             self.internal_Var_1_all=np.zeros((mesh.n_elem,13*mesh.n_Gauss_elem))
             self.tang_modu=np.zeros((6,6))
-            self.internal_var_Gauss_1=np.zeros((14,1))
-            #0:5 -> Elastic strain ; 6:11 -> Back stress ; 12: Isotropic hardening ; 13: Plastic multiplier (delta Gamma)
+            self.internal_var_Gauss_1=np.zeros((13,1))
+            #0:5 -> Elastic strain ; 6:11 -> Back stress ; 12: Isotropic hardening ; 
             self.stress_nodes=np.zeros((mesh.n_nodes_glob,n_Voight)) 
             self.strain_nodes=np.zeros((mesh.n_nodes_glob,n_Voight)) 
             self.cont_average=np.zeros(mesh.n_nodes_glob)

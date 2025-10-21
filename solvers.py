@@ -188,6 +188,10 @@ def static_nonlinear(mesh, material_model, mat_prop, out_file_name, method='dire
         tang_modu=Vars.tang_modu
         
         # Recalcula a rigidez elementar para todos os elementos
+        #passar vetor de deslocamento do ultimo passo de newton
+        #passar variaveis internas do ultimo passo de newton
+        #passar delta gamma da ultima iteracao de newton. Se for a primeira do passo de carga, deve ser igual a zero 
+        #chama dentro da rotina do elemento a rotina que calcula o modulo tangente
         Vars.Ke_all_elem,Vars.B_all_elem,Vars.det_Jacobian_all=get_Ke_all_and_B_all(Vars.gauss_coord,
                                     Vars.gauss_weight,Vars.elem_coord,
                                     Vars.jacobian,Vars.det_Jacobian,Vars.deri_phi_param,
